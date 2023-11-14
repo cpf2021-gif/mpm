@@ -12,6 +12,10 @@ const (
 	alignLeft
 )
 
+const (
+	pageSize = 10
+)
+
 type columnConfig[V any] struct {
 	name      string
 	alignment columnAlignment
@@ -23,7 +27,8 @@ type column[V any] struct {
 	width int
 }
 
-func drawTable[V any](d *ScreenDrawer, style tcell.Style, configs []*columnConfig[V], data []V, highlightRowIdx int) {
+func drawTable[V any](d *ScreenDrawer, style tcell.Style, configs []*columnConfig[V], data []V, highlightRowIdx int, pageNum int) {
+
 	const colBuffer = "    " // extra buffer between columns
 	cols := make([]*column[V], len(configs))
 	for i, cfg := range configs {
@@ -48,9 +53,21 @@ func drawTable[V any](d *ScreenDrawer, style tcell.Style, configs []*columnConfi
 	}
 	d.FillLine(' ', headerStyle)
 	// print body
+
+	start := pageNum * pageSize
+	end := start + pageSize
+
 	for i, v := range data {
+		// get [start..end)
+		if i < start {
+			continue
+		}
+		if i >= end {
+			break
+		}
+
 		rowStyle := style
-		if highlightRowIdx == i {
+		if highlightRowIdx == i%10 {
 			rowStyle = style.Background(tcell.ColorDarkOliveGreen)
 		}
 		for _, col := range cols {

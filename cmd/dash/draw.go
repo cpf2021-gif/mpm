@@ -34,7 +34,6 @@ func (dd *dashDrawer) Draw(state *State) {
 func rpad(s string, padding int) string {
 	tmpl := fmt.Sprintf("%%-%ds ", padding)
 	return fmt.Sprintf(tmpl, s)
-
 }
 
 // lpad adds padding to the left of a string.
@@ -45,11 +44,11 @@ func lpad(s string, padding int) string {
 
 var listColumnConfigs = []*columnConfig[*model.List]{
 	{"ID", alignRight, func(l *model.List) string { return strconv.Itoa(int(l.ID)) }},
-	{"App", alignRight, func(l *model.List) string { return l.App }},
-	{"Account", alignRight, func(l *model.List) string { return l.Account }},
-	{"Password", alignRight, func(l *model.List) string { return l.Password }},
+	{"App", alignLeft, func(l *model.List) string { return l.App }},
+	{"Account", alignLeft, func(l *model.List) string { return l.Account }},
+	{"Password", alignLeft, func(l *model.List) string { return l.Password }},
 }
 
 func drawListTable(d *ScreenDrawer, style tcell.Style, state *State) {
-	drawTable(d, style, listColumnConfigs, state.lists, state.listTableRowIdx-1)
+	drawTable(d, style, listColumnConfigs, state.lists, state.listTableRowIdx, state.pageNum)
 }

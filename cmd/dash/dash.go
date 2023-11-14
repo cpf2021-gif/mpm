@@ -37,11 +37,14 @@ func Run() {
 	}
 
 	var (
-		state = State{lists: res}
+		state = State{
+			lists:           res,
+			listTableRowIdx: -1,
+		}
 
 		// key event
 		eventCh = make(chan tcell.Event)
-		done = make(chan struct{})
+		done    = make(chan struct{})
 	)
 
 	d := dashDrawer{
@@ -49,10 +52,10 @@ func Run() {
 	}
 
 	h := keyEventHandler{
-		s: s,
+		s:      s,
 		drawer: &d,
-		state: &state,
-		done: done,
+		state:  &state,
+		done:   done,
 	}
 
 	go s.ChannelEvents(eventCh, done)
@@ -63,9 +66,13 @@ func Run() {
 		select {
 		case ev := <-eventCh:
 			switch ev := ev.(type) {
+			case *tcell.EventResize:
+				d.Draw(&state)
+				s.Sync()
 			case *tcell.EventKey:
 				h.HandleKeyEvent(ev)
 			}
+		default:
 		}
 	}
 }
