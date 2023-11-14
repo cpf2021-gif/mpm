@@ -38,15 +38,34 @@ func Run() {
 
 	var (
 		state = State{lists: res}
+
+		// key event
+		eventCh = make(chan tcell.Event)
+		done = make(chan struct{})
 	)
 
 	d := dashDrawer{
 		s,
 	}
 
+	h := keyEventHandler{
+		s: s,
+		drawer: &d,
+		state: &state,
+		done: done,
+	}
+
+	go s.ChannelEvents(eventCh, done)
 	d.Draw(&state)
 
 	for {
 		s.Show()
+		select {
+		case ev := <-eventCh:
+			switch ev := ev.(type) {
+			case *tcell.EventKey:
+				h.HandleKeyEvent(ev)
+			}
+		}
 	}
 }
