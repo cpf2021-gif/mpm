@@ -8,12 +8,25 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
+type viewType int
+
+const (
+	viewTypeLists viewType = iota
+	viewTypeListDetail
+)
+
 type State struct {
 	lists []*model.List
 
 	listTableRowIdx int // highlighted row in list table
 
+	selectList *model.List
+
+	showModal bool
+
 	pageNum int
+
+	view viewType
 }
 
 func Run() {

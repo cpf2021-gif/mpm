@@ -32,6 +32,10 @@ func (h *keyEventHandler) HandleKeyEvent(ev *tcell.EventKey) {
 		h.prev()
 	} else if ev.Key() == tcell.KeyRight || ev.Rune() == 'l' {
 		h.next()
+	} else if ev.Key() == tcell.KeyEnter {
+		h.handleEnter()
+	} else if ev.Rune() == 'q' {
+		h.goBack()
 	}
 }
 
@@ -91,4 +95,36 @@ func (h *keyEventHandler) next() {
 	state.listTableRowIdx = -1
 
 	h.drawer.Draw(state)
+}
+
+func (h *keyEventHandler) handleEnter() {
+	state := h.state
+
+	switch state.view {
+	case viewTypeLists:
+		if state.listTableRowIdx > 0 {
+			idx := pageSize*state.pageNum + state.listTableRowIdx
+			state.selectList = state.lists[idx]
+			state.view = viewTypeListDetail
+			h.drawer.Draw(state)
+		}
+	case viewTypeListDetail:
+		state.showModal = true
+		h.drawer.Draw(state)
+	}
+}
+
+func (h *keyEventHandler) goBack() {
+	state := h.state
+
+	if state.view == viewTypeListDetail {
+		if state.showModal {
+			state.showModal = false
+			h.drawer.Draw(state)
+		} else {
+			state.view = viewTypeLists
+			h.drawer.Draw(state)
+		}
+	}
+
 }
