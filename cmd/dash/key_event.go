@@ -117,7 +117,8 @@ func (h *keyEventHandler) handleEnter() {
 func (h *keyEventHandler) goBack() {
 	state := h.state
 
-	if state.view == viewTypeListDetail {
+	switch state.view {
+	case viewTypeListDetail:
 		if state.showModal {
 			state.showModal = false
 			h.drawer.Draw(state)
@@ -125,6 +126,8 @@ func (h *keyEventHandler) goBack() {
 			state.view = viewTypeLists
 			h.drawer.Draw(state)
 		}
+	case viewTypeLists:
+		h.quit()
 	}
 
 }
