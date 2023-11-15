@@ -45,7 +45,7 @@ func (h *keyEventHandler) handleUpkey() {
 	if curPageEnd <= last {
 		state.listTableRowIdx = (state.listTableRowIdx + curPageSize - 1) % curPageSize
 	} else {
-		curPageSize = last % pageSize
+		curPageSize = (last + 1) % pageSize
 		state.listTableRowIdx = (state.listTableRowIdx + curPageSize - 1) % curPageSize
 	}
 	h.drawer.Draw(state)
@@ -61,7 +61,7 @@ func (h *keyEventHandler) handleDownkey() {
 	if curPageEnd <= last {
 		state.listTableRowIdx = (state.listTableRowIdx + curPageSize + 1) % curPageSize
 	} else {
-		curPageSize = last % pageSize
+		curPageSize = (last + 1) % pageSize
 		state.listTableRowIdx = (state.listTableRowIdx + curPageSize + 1) % curPageSize
 	}
 	h.drawer.Draw(state)
