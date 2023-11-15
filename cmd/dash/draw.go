@@ -28,6 +28,14 @@ func (dd *dashDrawer) Draw(state *State) {
 	d.Println("=== Lists ===", baseStyle.Bold(true))
 	d.NL()
 	drawListTable(d, baseStyle, state)
+
+	d.GoToBottom()
+	drawFooter(d)
+}
+
+func drawFooter(d *ScreenDrawer) {
+	style := baseStyle.Background(tcell.ColorDarkSlateGray).Foreground(tcell.ColorWhite)
+	d.Print("<Ctrl+C>: Exit", style)
 }
 
 // rpad adds padding to the right of a string.
