@@ -54,6 +54,7 @@ func drawFooter(d *ScreenDrawer, state *State) {
 		d.Print("<q>: GoBack    <Ctrl+C>: Exit", style)
 	}
 
+	d.FillLine(' ', style)
 }
 
 // rpad adds padding to the right of a string.
